@@ -54,14 +54,11 @@ def mkdir_if_need(file_path):
 async def request_my_tv_super_epg():
     file_path = get_epg_file_name_today("tvb")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        channels, programs = await MyTvSuper.get_channels(force=True)
-        response_xml = await gen_channel(channels, programs)
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日mytvsuper epg已获取，不执行更新")
+    channels, programs = await MyTvSuper.get_channels(force=True)
+    response_xml = await gen_channel(channels, programs)
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("tvb")
 
@@ -69,14 +66,11 @@ async def request_my_tv_super_epg():
 async def request_hami_epg():
     file_path = get_epg_file_name_today("hami")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        channels, programs = await Hami.request_all_epg()
-        response_xml = await gen_channel(channels, programs)
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日hami epg已获取，不执行更新")
+    channels, programs = await Hami.request_all_epg()
+    response_xml = await gen_channel(channels, programs)
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("hami")
 
@@ -84,13 +78,10 @@ async def request_hami_epg():
 async def request_cn_epg():
     file_path = get_epg_file_name_today("cn")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        response_xml = await get_cn_channels_epg()
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "w", encoding='utf-8') as file:
-            file.write(response_xml)
-    else:
-        print(f"今日cn epg已获取，不执行更新")
+    response_xml = await get_cn_channels_epg()
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "w", encoding='utf-8') as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("cn")
 
@@ -98,14 +89,11 @@ async def request_cn_epg():
 async def request_astro_epg():
     file_path = get_epg_file_name_today("astro")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        channels, programs = await get_astro_epg()
-        response_xml = await gen_channel(channels, programs)
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日Astro epg已获取，不执行更新")
+    channels, programs = await get_astro_epg()
+    response_xml = await gen_channel(channels, programs)
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("astro")
 
@@ -113,14 +101,11 @@ async def request_astro_epg():
 async def request_rthk_epg():
     file_path = get_epg_file_name_today("rthk")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        channels, programs = await get_rthk_epg()
-        response_xml = await gen_channel(channels, programs)
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日RTHK epg已获取，不执行更新")
+    channels, programs = await get_rthk_epg()
+    response_xml = await gen_channel(channels, programs)
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("rthk")
 
@@ -128,14 +113,11 @@ async def request_rthk_epg():
 async def request_hoy_epg():
     file_path = get_epg_file_name_today("hoy")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        channels, programs = await get_hoy_epg()
-        response_xml = await gen_channel(channels, programs)
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日HOY epg已获取，不执行更新")
+    channels, programs = await get_hoy_epg()
+    response_xml = await gen_channel(channels, programs)
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("hoy")
 
@@ -143,13 +125,10 @@ async def request_hoy_epg():
 async def request_now_tv_epg():
     file_path = get_epg_file_name_today("nowtv")
     mkdir_if_need(file_path)
-    if not os.path.exists(file_path):
-        response_xml = await request_nowtv_today_epg()
-        # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "wb") as file:
-            file.write(response_xml)
-    else:
-        print(f"今日nowtv epg已获取，不执行更新")
+    response_xml = await request_nowtv_today_epg()
+    # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
+    with open(file_path, "wb") as file:
+        file.write(response_xml)
     # 删除旧的EPG
     delete_old_epg_file("nowtv")
 
