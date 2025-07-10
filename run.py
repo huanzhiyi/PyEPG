@@ -1,6 +1,6 @@
 import asyncio
 import os
-from app.main import request_all_epg_job, EPG_PLATFORMS, logger
+from app.main import request_all_epg_job, request_cn_epg, request_my_tv_super_epg, request_now_tv_epg, request_hami_epg, request_astro_epg, request_rthk_epg, request_hoy_epg
 
 def platform_enabled(platform):
     """判断 enable 环境变量"""
