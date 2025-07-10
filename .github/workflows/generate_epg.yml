@@ -1,0 +1,46 @@
+name: Generate EPG
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight UTC every day
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'EPG platforms to enable (comma-separated)'
+        required: false
+        default: 'all'
+
+jobs:
+  generate-epg:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Generate EPG files
+      env:
+        EPG_ENABLE_CN: ${{ contains(github.event.inputs.platforms, 'cn') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_TVB: ${{ contains(github.event.inputs.platforms, 'tvb') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_NOWTV: ${{ contains(github.event.inputs.platforms, 'nowtv') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_HAMI: ${{ contains(github.event.inputs.platforms, 'hami') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_ASTRO: ${{ contains(github.event.inputs.platforms, 'astro') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_RTHK: ${{ contains(github.event.inputs.platforms, 'rthk') || github.event.inputs.platforms == 'all' }}
+        EPG_ENABLE_HOY: ${{ contains(github.event.inputs.platforms, 'hoy') || github.event.inputs.platforms == 'all' }}
+      run: python run.py
+
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git commit -m "Update EPG files" || echo "No changes to commit"
+        git push || echo "No changes to push"
