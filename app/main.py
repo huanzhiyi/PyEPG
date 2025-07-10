@@ -87,7 +87,7 @@ async def request_cn_epg():
     if not os.path.exists(file_path):
         response_xml = await get_cn_channels_epg()
         # 使用 with 语句打开文件，确保文件在操作完成后被正确关闭
-        with open(file_path, "w", encoding='utf-8') as file: 
+        with open(file_path, "w", encoding='utf-8') as file:
             file.write(response_xml)
     else:
         print(f"今日cn epg已获取，不执行更新")
@@ -269,18 +269,28 @@ async def gen_channel(channels, programs):
     return await generateEpg(channels, programs)
 
 
+FETCHERS = {
+    "request_cn_epg": request_cn_epg,
+    "request_my_tv_super_epg": request_my_tv_super_epg,
+    "request_now_tv_epg": request_now_tv_epg,
+    "request_hami_epg": request_hami_epg,
+    "request_astro_epg": request_astro_epg,
+    "request_rthk_epg": request_rthk_epg,
+    "request_hoy_epg": request_hoy_epg,
+}
+
+
 async def request_all_epg_job():
-    tasks = [
-        globals()[conf["fetcher"]]()
-        for conf in EPG_PLATFORMS
-        if platform_enabled(conf["platform"])
+    enabled_platforms = [
+        conf for conf in EPG_PLATFORMS if platform_enabled(conf["platform"])
     ]
+    tasks = [FETCHERS[conf["fetcher"]]() for conf in enabled_platforms]
     # 并行执行所有任务
     results = await asyncio.gather(*tasks, return_exceptions=True)
     # 处理可能的异常
     for i, result in enumerate(results):
         if isinstance(result, Exception):
             # 获取函数名称更好地标识任务
-            task_name = EPG_PLATFORMS[i].get("fetcher", f"Task {i}")
+            task_name = enabled_platforms[i].get("fetcher", f"Task {i}")
             logger.error(f"{task_name} 请求EPG时发生错误: {str(result)}")
 
